@@ -9,8 +9,10 @@ require "uri"
 require "fileutils"
 
 module Nikkan
+   HOSTNAME = "tv.nikkansports.com"
    def get_all_iepg( area )
-      rss_url = "http://tv.nikkansports.com/tv.php?mode=04&site=007&lhour=2&category=g&template=rss&area=#{ area }&pageCharSet=UTF8"
+      conn = 
+      rss_url = "http://#{ HOSTNAME }/tv.php?mode=04&site=007&lhour=2&category=g&template=rss&area=#{ area }&pageCharSet=UTF8"
       cont = open( rss_url ){|io| io.read }
       doc = REXML::Document.new( cont )
       doc.elements.each( "//item" ) do |item|
@@ -33,7 +35,7 @@ module Nikkan
 
          if /<a href="(\/iepg\.php\?.*)">/ =~ cont
             path = $1
-            iepg_url = "http://tv.nikkansports.com#{ path }"
+            iepg_url = "http://#{ HOSTNAME }#{ path }"
             cont = open( iepg_url ){|io| io.read }
             filename = File.join( area, date, station, "#{time}.iepg" )
             open( filename, "w" ){|io| io.puts cont }
