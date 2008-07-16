@@ -24,6 +24,7 @@ module Nikkan
          doc.elements.each( "//item" ) do |item|
             # puts item.text("./title").toeuc
             url = item.text("./link")
+            next if url.nil? or url.empty?
             params = URI.parse( url ).query.split(/&/)
             params_hash = Hash[ *params.map{|e| e.split(/\=/) }.flatten ]
             # p params_hash
