@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# -*- coding: euc-jp -*-
 # $Id$
 
 # require "rss"
@@ -20,7 +21,13 @@ module Nikkan
          rss_file = File.join( area, "rss.xml" )
          return if not save_if_updated( cont, rss_file )
 
-         doc = REXML::Document.new( cont )
+         doc = begin
+                  REXML::Document.new( cont )
+               rescue REXML::ParserException
+                  STDERR.puts "REXML::ParserException ... converting the encoding into utf-8"
+                  # encoding="utf-8" なのに、EUC-JP のデータを受信することがある。
+                  REXML::Document.new( cont.toutf8 )
+               end
          doc.elements.each( "//item" ) do |item|
             # puts item.text("./title").toeuc
             url = item.text("./link")
