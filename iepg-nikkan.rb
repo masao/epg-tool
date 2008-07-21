@@ -23,9 +23,10 @@ module Nikkan
 
          doc = begin
                   REXML::Document.new( cont )
-               rescue REXML::ParserException
-                  STDERR.puts "REXML::ParserException ... converting the encoding into utf-8"
+               rescue REXML::ParseException => e
                   # encoding="utf-8" なのに、EUC-JP のデータを受信することがある。
+                  STDERR.puts e.to_s
+                  STDERR.puts "retry with converting the encoding into utf-8..."
                   REXML::Document.new( cont.toutf8 )
                end
          doc.elements.each( "//item" ) do |item|
