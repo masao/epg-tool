@@ -25,7 +25,7 @@ module Nikkan
                   REXML::Document.new( cont )
                rescue REXML::ParseException => e
                   # encoding="utf-8" なのに、EUC-JP のデータを受信することがある。
-                  STDERR.puts e.to_s
+                  STDERR.puts "REXML::ParseException for #{area}:" + e.to_s
                   STDERR.puts "retry with converting the encoding into utf-8..."
                   REXML::Document.new( cont.toutf8 )
                end
@@ -73,7 +73,7 @@ module Nikkan
       open( filename, "w" ) do |io|
          io.print buf
       end
-      STDERR.puts "#{filename} saved"
+      # STDERR.puts "#{filename} saved"
       return true
    end
 end
